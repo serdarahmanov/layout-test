@@ -21,7 +21,7 @@ function snapshotCssSvh() {
   return height;
 }
 
-export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false, singlePinnedTrigger = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean; singlePinnedTrigger?: boolean }) {
+export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false, singlePinnedTrigger = false, promotePinnedLayer = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean; singlePinnedTrigger?: boolean; promotePinnedLayer?: boolean }) {
   const stageRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
@@ -164,7 +164,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
         if (trigger.trigger === stage) trigger.kill();
       });
     };
-  }, [enableTouchLenis, isSnapshotMode, ready, singlePinnedTrigger, snapshotHeight]);
+  }, [enableTouchLenis, isSnapshotMode, promotePinnedLayer, ready, singlePinnedTrigger, snapshotHeight]);
 
   const pageStyle = snapshotHeight
     ? ({ "--snapshot-svh": `${snapshotHeight}px` } as CSSProperties)
@@ -190,7 +190,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
         <span className={styles.readout}>{snapshotHeight ? `Frozen height: ${snapshotHeight}px` : "Waiting for viewport setup..."}</span>
       </section>
 
-      <section ref={stageRef} className={styles.stage} aria-label="Lenis and GSAP pinned viewport test">
+      <section ref={stageRef} className={`${styles.stage} ${promotePinnedLayer ? styles.promotedStage : ""}`} aria-label="Lenis and GSAP pinned viewport test">
         <div ref={trackRef} className={styles.track}>
           <article className={styles.panel}><span>01 / pin</span><strong>Scroll the stage.</strong><small>{isSnapshotMode ? "Native touch / Lenis desktop" : "Lenis + ScrollTrigger"}</small></article>
           <article className={`${styles.panel} ${styles.panelBlue}`}><span>02 / measure</span><strong>Watch the HUD.</strong><small>{isSnapshotMode ? "Static section height" : "Live svh section height"}</small></article>
