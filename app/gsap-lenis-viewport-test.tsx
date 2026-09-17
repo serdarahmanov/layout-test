@@ -21,7 +21,7 @@ function snapshotCssSvh() {
   return height;
 }
 
-export default function GsapLenisViewportTest({ mode }: { mode: TestMode }) {
+export default function GsapLenisViewportTest({ mode, showHud = true }: { mode: TestMode; showHud?: boolean }) {
   const stageRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
@@ -181,7 +181,7 @@ export default function GsapLenisViewportTest({ mode }: { mode: TestMode }) {
       </section>
 
       <section className={styles.after}><span className={styles.label}>After the pin</span><h2>Did the layout stay coherent?</h2><p>Scroll back through the stage and compare the pin start, release, and viewport-based motion.</p></section>
-      <ViewportHud />
+      {showHud ? <ViewportHud /> : null}
     </main>
   );
 }
