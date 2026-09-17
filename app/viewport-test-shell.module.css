@@ -65,6 +65,10 @@
   padding: 2rem 1.25rem;
 }
 
+.mainScrollable {
+  justify-content: flex-start;
+}
+
 .card {
   width: min(100%, 32rem);
   padding: 1.5rem;

@@ -31,7 +31,7 @@ export default function ViewportTestShell({
         </span>
       </header>
 
-      <main className={styles.main}>
+      <main className={`${styles.main} ${hasLiveIndicator ? styles.mainScrollable : ""}`}>
         <div className={styles.card}>
           <span className={styles.cardLabel}>Current experiment</span>
           <p>{description}</p>
