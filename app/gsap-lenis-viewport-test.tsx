@@ -21,7 +21,7 @@ function snapshotCssSvh() {
   return height;
 }
 
-export default function GsapLenisViewportTest({ mode, showHud = true }: { mode: TestMode; showHud?: boolean }) {
+export default function GsapLenisViewportTest({ mode, showHud = true, experimentalMobilePin = false }: { mode: TestMode; showHud?: boolean; experimentalMobilePin?: boolean }) {
   const stageRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
@@ -52,7 +52,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true }: { mode: 
     let cancelled = false;
     let resizeTimer = 0;
     const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const useLenis = !isSnapshotMode || !isTouchDevice;
+    const useLenis = experimentalMobilePin || !isSnapshotMode || !isTouchDevice;
     const lenis = useLenis ? new Lenis({ autoRaf: false, smoothWheel: true, syncTouch: false }) : null;
     const stage = stageRef.current;
     const track = trackRef.current;
@@ -76,6 +76,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true }: { mode: 
           start: "top top",
           end: `+=${pinDistance}`,
           pin: true,
+          pinType: experimentalMobilePin && isTouchDevice ? "transform" : undefined,
           scrub: true,
           invalidateOnRefresh: true,
         },
@@ -146,7 +147,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true }: { mode: 
         if (trigger.trigger === stage) trigger.kill();
       });
     };
-  }, [isSnapshotMode, ready, snapshotHeight]);
+  }, [experimentalMobilePin, isSnapshotMode, ready, snapshotHeight]);
 
   const pageStyle = snapshotHeight
     ? ({ "--snapshot-svh": `${snapshotHeight}px` } as CSSProperties)
@@ -159,13 +160,15 @@ export default function GsapLenisViewportTest({ mode, showHud = true }: { mode: 
           <span className={styles.eyebrow}>Viewport lab / {isSnapshotMode ? "Test 11" : "Test 10"}</span>
           <h1>{isSnapshotMode ? "Pins that wait." : "Pins that chase."}</h1>
         </div>
-        <span className={styles.badge}>{isSnapshotMode ? "snapshot + native/Lenis" : "live svh + Lenis"}</span>
+        <span className={styles.badge}>{experimentalMobilePin ? "snapshot + touch Lenis" : isSnapshotMode ? "snapshot + native/Lenis" : "live svh + Lenis"}</span>
       </header>
 
       <section className={styles.explainer}>
         <span className={styles.label}>{isSnapshotMode ? "Skill strategy" : "Control case"}</span>
         <p>{isSnapshotMode
-          ? "The CSS-native svh value is captured after load and paint. Pin creation waits for that value. Desktop uses Lenis; touch devices use native scrolling, while mobile toolbar resize is ignored."
+          ? experimentalMobilePin
+            ? "The CSS-native svh value is captured after load and paint. This experiment keeps Lenis on touch devices and forces transform pinning to test iOS compositor behavior."
+            : "The CSS-native svh value is captured after load and paint. Pin creation waits for that value. Desktop uses Lenis; touch devices use native scrolling, while mobile toolbar resize is ignored."
           : "This control deliberately mixes live 100svh, innerHeight-based animation distances, immediate pin creation, and refreshes on every resize. Use it to expose toolbar-related jumps."}</p>
         <span className={styles.readout}>{snapshotHeight ? `Frozen height: ${snapshotHeight}px` : "Waiting for viewport setup..."}</span>
       </section>

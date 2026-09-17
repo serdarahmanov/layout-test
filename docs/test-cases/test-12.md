@@ -10,14 +10,14 @@ Repeat Test 11 without the live viewport HUD to isolate HUD-related scroll overh
 
 ## Expected behavior
 
-The page uses the CSS `100svh` snapshot, gates pin creation until the snapshot is applied, uses native scrolling on touch devices, and uses Lenis on desktop. The stage and viewport-based animation should behave like Test 11, but without React state updates or viewport measurements from the HUD during scrolling.
+The page uses the CSS `100svh` snapshot and gates pin creation until the snapshot is applied. Unlike Test 11, it keeps Lenis enabled on touch devices and forces `pinType: "transform"` for the pinned section. The page has no HUD, so it isolates the effect of touch Lenis and transform pinning.
 
 ## Procedure
 
 1. Open `/test-12` on the same mobile device used for Test 11.
 2. Scroll through the pinned stage repeatedly, including while the browser toolbar hides and appears.
 3. Compare the pin smoothness with Test 11.
-4. If Test 12 is smoother, the live HUD was contributing to the lag. If the lag remains, inspect native ScrollTrigger updates, pinned compositing, and the orb transform separately.
+4. Compare the result with Test 11. If Test 12 is smoother, touch Lenis or transform pinning may be helping. If the lag remains, inspect the pinned compositing and scrubbed transforms separately.
 
 ## Comparison
 
