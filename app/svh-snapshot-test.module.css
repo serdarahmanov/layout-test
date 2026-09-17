@@ -1,31 +1,17 @@
-.page {
-  --ink: #17202a;
-  --muted: #68727d;
-  --paper: #f6f4ef;
-  --blue: #2667ff;
-  --orange: #ff7043;
-  min-height: var(--js-svh, 100svh);
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-geist-sans), sans-serif;
-}
-
-.svhProbe { position: absolute; width: 1px; height: 100svh; visibility: hidden; }
+.page { --ink: #17202a; --muted: #68727d; --paper: #f6f4ef; --blue: #2667ff; --orange: #ff7043; min-height: var(--snapshot-svh, 100svh); background: var(--paper); color: var(--ink); font-family: var(--font-geist-sans), sans-serif; }
 .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 2rem 1.25rem 1.5rem; background: var(--ink); color: var(--paper); }
 .eyebrow, .label { color: var(--orange); font-family: var(--font-geist-mono), monospace; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .header h1 { max-width: 28rem; margin: .75rem 0 0; font-size: clamp(2.4rem, 11vw, 5rem); line-height: .92; letter-spacing: -.07em; }
 .unit { flex: none; max-width: 8rem; padding: .5rem .65rem; border: 1px solid #56616e; border-radius: 999px; color: #c9d1d9; font-family: var(--font-geist-mono), monospace; font-size: .7rem; text-align: center; }
-.intro, .compare, .log { max-width: 52rem; margin: 0 auto; padding: 2rem 1.25rem; }
+.intro, .log { max-width: 52rem; margin: 0 auto; padding: 2rem 1.25rem; }
 .intro { display: grid; gap: 1rem; }
-.intro p, .panel p, .log > p { max-width: 38rem; margin: 0; color: var(--muted); line-height: 1.6; }
-.page button { width: fit-content; padding: .7rem .9rem; border: 0; border-radius: .5rem; background: var(--blue); color: white; font: inherit; font-size: .85rem; cursor: pointer; }
-.compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
-.panel { display: grid; min-height: 13rem; gap: .75rem; align-content: space-between; padding: 1.25rem; border: 1px solid #d8d4cc; border-radius: 1rem; background: white; }
-.jsPanel { border-color: var(--blue); box-shadow: inset .35rem 0 var(--blue); }
-.panel strong { font-size: clamp(2.3rem, 10vw, 4.5rem); letter-spacing: -.08em; }
-.panel code { color: var(--blue); font-family: var(--font-geist-mono), monospace; font-size: .72rem; }
-.panel p { font-size: .85rem; }
-.log { padding-top: 1rem; }
+.intro p, .log > p { max-width: 38rem; margin: 0; color: var(--muted); line-height: 1.6; }
+.objectGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; max-width: 52rem; margin: 0 auto; padding: 0 1.25rem; }
+.snapshotBox { display: grid; height: var(--snapshot-svh, 100svh); min-height: 13rem; gap: .75rem; align-content: space-between; padding: 1.25rem; border: 2px solid var(--orange); border-radius: 1rem; background: white; box-shadow: inset .35rem 0 var(--orange); }
+.snapshotBoxAlt { border-color: var(--blue); box-shadow: inset .35rem 0 var(--blue); }
+.snapshotBox strong { font-size: clamp(2.3rem, 10vw, 4.5rem); letter-spacing: -.08em; }
+.snapshotBox code { color: var(--blue); font-family: var(--font-geist-mono), monospace; font-size: .72rem; }
+.log { padding-top: 2rem; }
 .logHeading h2 { margin: .5rem 0 1rem; font-size: clamp(1.6rem, 6vw, 2.6rem); letter-spacing: -.06em; }
 .tableWrap { overflow-x: auto; border: 1px solid #d8d4cc; border-radius: .75rem; background: white; }
 .tableWrap table { width: 100%; border-collapse: collapse; font-family: var(--font-geist-mono), monospace; font-size: .75rem; }
@@ -33,5 +19,5 @@
 .tableWrap th { color: var(--muted); font-weight: 500; }
 .tableWrap tbody tr:last-child td { border-bottom: 0; }
 .scrollZone { min-height: 65vh; margin: 1rem 1.25rem 0; padding: 1rem; border-top: 1px dashed #c9c3b8; color: var(--muted); font-family: var(--font-geist-mono), monospace; font-size: .75rem; }
-@media (min-width: 700px) { .header { padding: 3rem 3rem 2rem; } .intro, .compare, .log { padding-right: 3rem; padding-left: 3rem; } .scrollZone { margin-right: 3rem; margin-left: 3rem; } }
-@media (max-width: 480px) { .compare { grid-template-columns: 1fr; } }
+@media (min-width: 700px) { .header { padding: 3rem 3rem 2rem; } .intro, .log, .objectGrid { padding-right: 3rem; padding-left: 3rem; } .scrollZone { margin-right: 3rem; margin-left: 3rem; } }
+@media (max-width: 480px) { .objectGrid { grid-template-columns: 1fr; } }

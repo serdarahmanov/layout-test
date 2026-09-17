@@ -10,19 +10,19 @@ Demonstrate a JS-snapshot fallback for inconsistent `svh` behavior across iOS Sa
 
 ## Expected behavior
 
-The page identifies the browser and records exactly one visible viewport height on initial load. It reads `window.visualViewport.height`, falling back to `window.innerHeight` when `visualViewport` is unsupported. Compare that JS snapshot with the native `100svh` probe. The JS value is exposed as `--js-svh` for sizing a critical shell consistently from the initial state.
+The page waits for `load`, then one animation frame, and reads the browser-computed pixel height of a hidden `100svh` probe. That value is written once to `--snapshot-svh`; both visible viewboxes use the static pixel value.
 
 ## Procedure
 
 1. Open `/test-9` in iOS Safari, then repeat in iOS Chrome.
-2. Note the native `100svh` value and the initial JS snapshot.
+2. Note the initial CSS-computed `100svh` snapshot.
 3. Scroll slowly to hide and reveal the browser toolbar.
-4. Confirm that the JS snapshot remains fixed because it was captured only during initial page load.
-5. Compare the initial snapshot with the native `svh` value in each browser.
+4. Confirm that both viewboxes remain fixed because they use the static snapshot rather than live `svh`.
+5. Compare the initial snapshot between browsers.
 
 ## Implementation note
 
-This is a measurement-and-snapshot pattern, not a claim that every browser bug has the same cause. For production, apply the captured initial value only to UI that must remain visible.
+This is a measurement-and-snapshot pattern, not a claim that every browser bug has the same cause. For production, apply the captured initial CSS value only to UI that must remain visible.
 
 ## Comparison
 
