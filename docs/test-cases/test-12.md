@@ -10,7 +10,7 @@ Repeat Test 11 without the live viewport HUD to isolate HUD-related scroll overh
 
 ## Expected behavior
 
-The page uses the CSS `100svh` snapshot and gates pin creation until the snapshot is applied. Unlike Test 11, it keeps Lenis enabled on touch devices, uses GSAP's normal pin behavior, merges the track and orb animations into one timeline driven by one ScrollTrigger, and promotes the pinned stage with `will-change: transform` and `contain: layout paint style`. The page has no HUD, so it isolates the effect of touch Lenis, reduced trigger count, and compositor isolation.
+The page uses only the CSS `100svh` snapshot for the pinned stage and gates pin creation until `--snapshot-svh` is applied. There is no live `100svh` fallback in snapshot mode. Unlike Test 11, it keeps Lenis enabled on touch devices, uses GSAP's normal pin behavior, merges the track and orb animations into one timeline driven by one ScrollTrigger, and promotes the pinned stage with `will-change: transform` and `contain: layout paint style`. The page has no HUD, so it isolates the effect of touch Lenis, reduced trigger count, and compositor isolation.
 
 ## Procedure
 

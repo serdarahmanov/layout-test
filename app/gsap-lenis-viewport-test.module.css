@@ -1,6 +1,6 @@
 .page { --ink: #121820; --paper: #f1ede5; --muted: #65707b; --blue: #285bff; --orange: #f06d3b; min-height: 100%; background: var(--paper); color: var(--ink); font-family: var(--font-geist-sans), sans-serif; }
 .live { --stage-height: 100svh; }
-.snapshot { --stage-height: var(--snapshot-svh, 100svh); }
+.snapshot { --stage-height: var(--snapshot-svh); }
 .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 2.5rem 1.25rem 2rem; background: var(--ink); color: var(--paper); }
 .eyebrow, .label, .stageNote, .readout { color: var(--orange); font-family: var(--font-geist-mono), monospace; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
 .header h1 { max-width: 32rem; margin: .75rem 0 0; font-size: clamp(3rem, 13vw, 7rem); line-height: .88; letter-spacing: -.08em; }
@@ -10,6 +10,7 @@
 .explainer p, .after p { max-width: 38rem; margin: 0; color: var(--muted); line-height: 1.6; }
 .readout { color: var(--blue); }
 .stage { position: relative; height: var(--stage-height); min-height: 24rem; overflow: hidden; background: #d8d1c4; }
+.snapshot .stage { min-height: 0; }
 .promotedStage { will-change: transform; contain: layout paint style; }
 .track { display: flex; width: 300vw; height: 100%; }
 .panel { display: grid; flex: 0 0 100vw; min-height: 100%; align-content: space-between; padding: 1.25rem; border-right: 1px solid rgb(18 24 32 / .15); background: #d8d1c4; }
