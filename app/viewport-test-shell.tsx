@@ -9,6 +9,7 @@ type ViewportTestShellProps = {
   viewportUnit: ViewportUnit;
   description: string;
   comparison?: boolean;
+  scrollable?: boolean;
 };
 
 export default function ViewportTestShell({
@@ -16,8 +17,10 @@ export default function ViewportTestShell({
   viewportUnit,
   description,
   comparison = false,
+  scrollable = false,
 }: ViewportTestShellProps) {
   const hasLiveIndicator = viewportUnit !== "vh";
+  const hasScrollContent = hasLiveIndicator || scrollable;
 
   return (
     <div className={`${styles.page} ${styles[viewportUnit]}`}>
@@ -41,16 +44,16 @@ export default function ViewportTestShell({
           </p>
         </div>
 
-        {hasLiveIndicator ? (
+        {hasScrollContent ? (
           <>
-            {comparison ? (
+            {hasLiveIndicator && comparison ? (
               <div className={styles.comparison} aria-label="Dynamic and small viewport comparison">
                 <ViewportHeightIndicator viewportUnit="dvh" />
                 <ViewportHeightIndicator viewportUnit="svh" />
               </div>
-            ) : (
+            ) : hasLiveIndicator ? (
               <ViewportHeightIndicator viewportUnit={viewportUnit} />
-            )}
+            ) : null}
             <section className={styles.filler} aria-label="Scroll section one">
               <span>Scroll section 01</span>
               <strong>Toolbar movement needs real scroll distance.</strong>
