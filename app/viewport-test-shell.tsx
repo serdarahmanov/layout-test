@@ -10,6 +10,8 @@ type ViewportTestShellProps = {
   description: string;
   comparison?: boolean;
   scrollable?: boolean;
+  pageMultiplier?: 1 | 2;
+  fixedHeader?: boolean;
 };
 
 export default function ViewportTestShell({
@@ -18,13 +20,15 @@ export default function ViewportTestShell({
   description,
   comparison = false,
   scrollable = false,
+  pageMultiplier = 1,
+  fixedHeader = false,
 }: ViewportTestShellProps) {
   const hasLiveIndicator = viewportUnit !== "vh";
   const hasScrollContent = hasLiveIndicator || scrollable;
 
   return (
-    <div className={`${styles.page} ${styles[viewportUnit]}`}>
-      <header className={styles.header}>
+    <div className={`${styles.page} ${styles[viewportUnit]} ${styles[`height${pageMultiplier}`]}`}>
+      <header className={`${styles.header} ${fixedHeader ? styles.fixedHeader : ""}`}>
         <div>
           <span className={styles.eyebrow}>Viewport lab / Test {testNumber}</span>
           <h1>Header + footer baseline</h1>

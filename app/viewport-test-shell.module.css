@@ -14,9 +14,16 @@
   font-family: var(--font-geist-sans), sans-serif;
 }
 
+.height1 { --page-multiplier: 1; }
+.height200 { --page-multiplier: 2; }
+
 .vh { --viewport-height: 100vh; }
 .dvh { --viewport-height: 100dvh; }
 .svh { --viewport-height: 100svh; }
+
+.page {
+  height: calc(var(--viewport-height) * var(--page-multiplier));
+}
 
 .header {
   display: flex;
@@ -27,6 +34,17 @@
   border-bottom: 1px solid var(--line);
   background: var(--ink);
   color: var(--honeydew);
+}
+
+.fixedHeader {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 5;
+  width: 100%;
+}
+
+.fixedHeader + .main {
+  padding-top: 12rem;
 }
 
 .eyebrow,
@@ -153,5 +171,9 @@
   .footer {
     padding-right: 3rem;
     padding-left: 3rem;
+  }
+
+  .fixedHeader + .main {
+    padding-top: 15rem;
   }
 }
