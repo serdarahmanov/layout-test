@@ -10,14 +10,14 @@ Repeat Test 11 without the live viewport HUD to isolate HUD-related scroll overh
 
 ## Expected behavior
 
-The page uses the CSS `100svh` snapshot and gates pin creation until the snapshot is applied. Unlike Test 11, it keeps Lenis enabled on touch devices while using GSAP's normal pin behavior. The page has no HUD, so it isolates the effect of touch Lenis without the transform-pin experiment.
+The page uses the CSS `100svh` snapshot and gates pin creation until the snapshot is applied. Unlike Test 11, it keeps Lenis enabled on touch devices, uses GSAP's normal pin behavior, and merges the track and orb animations into one timeline driven by one ScrollTrigger. The page has no HUD, so it isolates the effect of touch Lenis and reduced trigger count.
 
 ## Procedure
 
 1. Open `/test-12` on the same mobile device used for Test 11.
 2. Scroll through the pinned stage repeatedly, including while the browser toolbar hides and appears.
 3. Compare the pin smoothness with Test 11.
-4. Compare the result with Test 11. If Test 12 is smoother, touch Lenis may be helping. If the lag remains, inspect the pinned compositing and scrubbed transforms separately.
+4. Compare the result with Test 11. If Test 12 is smoother, touch Lenis or the single-trigger timeline may be helping. If the lag remains, inspect the pinned compositing and scrubbed transforms separately.
 
 ## Comparison
 

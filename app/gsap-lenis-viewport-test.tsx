@@ -21,7 +21,7 @@ function snapshotCssSvh() {
   return height;
 }
 
-export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean }) {
+export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false, singlePinnedTrigger = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean; singlePinnedTrigger?: boolean }) {
   const stageRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
@@ -51,6 +51,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
 
     let cancelled = false;
     let resizeTimer = 0;
+    let combinedTimeline: ReturnType<typeof gsap.timeline> | null = null;
     const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
     const useLenis = enableTouchLenis || !isSnapshotMode || !isTouchDevice;
     const lenis = useLenis ? new Lenis({ autoRaf: false, smoothWheel: true, syncTouch: false }) : null;
@@ -68,29 +69,45 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
 
       gsap.set(track, { x: 0 });
       gsap.set(orb, { y: 0 });
-      gsap.to(track, {
-        x: () => -horizontalDistance,
-        ease: "none",
-        scrollTrigger: {
+      if (singlePinnedTrigger) {
+        combinedTimeline = gsap.timeline({ paused: true });
+        combinedTimeline
+          .to(track, { x: () => -horizontalDistance, ease: "none" }, 0)
+          .to(orb, { y: viewportHeight * 0.55, ease: "none" }, 0);
+        ScrollTrigger.create({
           trigger: stage,
           start: "top top",
           end: `+=${pinDistance}`,
           pin: true,
           scrub: true,
+          animation: combinedTimeline,
           invalidateOnRefresh: true,
-        },
-      });
-      gsap.to(orb, {
-        y: viewportHeight * 0.55,
-        ease: "none",
-        scrollTrigger: {
-          trigger: stage,
-          start: "top top",
-          end: `+=${pinDistance}`,
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      });
+        });
+      } else {
+        gsap.to(track, {
+          x: () => -horizontalDistance,
+          ease: "none",
+          scrollTrigger: {
+            trigger: stage,
+            start: "top top",
+            end: `+=${pinDistance}`,
+            pin: true,
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+        gsap.to(orb, {
+          y: viewportHeight * 0.55,
+          ease: "none",
+          scrollTrigger: {
+            trigger: stage,
+            start: "top top",
+            end: `+=${pinDistance}`,
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
     };
 
     const onResize = () => {
@@ -142,11 +159,12 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
       window.removeEventListener("orientationchange", onOrientationChange);
       if (lenis) gsap.ticker.remove(ticker);
       lenis?.destroy();
+      combinedTimeline?.kill();
       ScrollTrigger.getAll().forEach((trigger) => {
         if (trigger.trigger === stage) trigger.kill();
       });
     };
-  }, [enableTouchLenis, isSnapshotMode, ready, snapshotHeight]);
+  }, [enableTouchLenis, isSnapshotMode, ready, singlePinnedTrigger, snapshotHeight]);
 
   const pageStyle = snapshotHeight
     ? ({ "--snapshot-svh": `${snapshotHeight}px` } as CSSProperties)
