@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import ViewportHud from "./viewport-hud";
 import styles from "./svh-snapshot-test.module.css";
 
 type Snapshot = { time: string; svh: number };
@@ -56,6 +57,7 @@ export default function SvhSnapshotTest() {
         {!snapshot ? <p>Waiting for the page to finish loading...</p> : <div className={styles.tableWrap}><table><thead><tr><th>Time</th><th>Source</th><th>Snapshot</th></tr></thead><tbody><tr><td>{snapshot.time}</td><td>100svh CSS probe</td><td>{snapshot.svh}px</td></tr></tbody></table></div>}
       </section>
       <div className={styles.scrollZone} aria-hidden="true">Scroll slowly to move the iOS toolbar. The two objects should keep their initial height.</div>
+      <ViewportHud />
     </main>
   );
 }
