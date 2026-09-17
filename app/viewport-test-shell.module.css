@@ -9,7 +9,6 @@
   height: var(--viewport-height);
   display: grid;
   grid-template-rows: auto 1fr auto;
-  overflow: auto;
   background: var(--surface);
   color: var(--ink);
   font-family: var(--font-geist-sans), sans-serif;
