@@ -1,0 +1,48 @@
+.hud {
+  position: fixed;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 10;
+  width: 11.5rem;
+  padding: 0.75rem;
+  border: 1px solid #a8dadc;
+  border-radius: 0.75rem;
+  background: #1d3557;
+  color: #f1faee;
+  box-shadow: 0 0.75rem 2rem rgb(29 53 87 / 0.22);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.68rem;
+}
+
+.hud strong {
+  color: #a8dadc;
+  font-size: 0.72rem;
+}
+
+.hud dl {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.65rem 0 0;
+}
+
+.hud dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hud dt { color: #a8dadc; }
+.hud dd { margin: 0; color: #f1faee; }
+
+.measureDvh,
+.measureSvh,
+.measureLvh {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  visibility: hidden;
+}
+
+.measureDvh { height: 100dvh; }
+.measureSvh { height: 100svh; }
+.measureLvh { height: 100lvh; }
