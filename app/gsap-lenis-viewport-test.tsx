@@ -51,11 +51,13 @@ export default function GsapLenisViewportTest({ mode }: { mode: TestMode }) {
 
     let cancelled = false;
     let resizeTimer = 0;
-    const lenis = new Lenis({ autoRaf: false, smoothWheel: true, syncTouch: false });
+    const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const useLenis = !isSnapshotMode || !isTouchDevice;
+    const lenis = useLenis ? new Lenis({ autoRaf: false, smoothWheel: true, syncTouch: false }) : null;
     const stage = stageRef.current;
     const track = trackRef.current;
     const orb = orbRef.current;
-    if (!stage || !track || !orb) return () => lenis.destroy();
+    if (!stage || !track || !orb) return () => lenis?.destroy();
     if (isSnapshotMode) ScrollTrigger.config({ ignoreMobileResize: true });
 
     const setup = () => {
@@ -127,17 +129,19 @@ export default function GsapLenisViewportTest({ mode }: { mode: TestMode }) {
     window.addEventListener("resize", onResize);
     window.addEventListener("orientationchange", onOrientationChange);
 
-    lenis.on("scroll", ScrollTrigger.update);
-    const ticker = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(ticker);
-    gsap.ticker.lagSmoothing(0);
+    const ticker = (time: number) => lenis?.raf(time * 1000);
+    if (lenis) {
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(ticker);
+      gsap.ticker.lagSmoothing(0);
+    }
     return () => {
       cancelled = true;
       window.clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onOrientationChange);
-      gsap.ticker.remove(ticker);
-      lenis.destroy();
+      if (lenis) gsap.ticker.remove(ticker);
+      lenis?.destroy();
       ScrollTrigger.getAll().forEach((trigger) => {
         if (trigger.trigger === stage) trigger.kill();
       });
@@ -155,20 +159,20 @@ export default function GsapLenisViewportTest({ mode }: { mode: TestMode }) {
           <span className={styles.eyebrow}>Viewport lab / {isSnapshotMode ? "Test 11" : "Test 10"}</span>
           <h1>{isSnapshotMode ? "Pins that wait." : "Pins that chase."}</h1>
         </div>
-        <span className={styles.badge}>{isSnapshotMode ? "snapshot + Lenis" : "live svh + Lenis"}</span>
+        <span className={styles.badge}>{isSnapshotMode ? "snapshot + native/Lenis" : "live svh + Lenis"}</span>
       </header>
 
       <section className={styles.explainer}>
         <span className={styles.label}>{isSnapshotMode ? "Skill strategy" : "Control case"}</span>
         <p>{isSnapshotMode
-          ? "The CSS-native svh value is captured after load and paint. Pin creation waits for that value, while Lenis drives the same ScrollTrigger instance. Mobile toolbar resize is ignored."
+          ? "The CSS-native svh value is captured after load and paint. Pin creation waits for that value. Desktop uses Lenis; touch devices use native scrolling, while mobile toolbar resize is ignored."
           : "This control deliberately mixes live 100svh, innerHeight-based animation distances, immediate pin creation, and refreshes on every resize. Use it to expose toolbar-related jumps."}</p>
         <span className={styles.readout}>{snapshotHeight ? `Frozen height: ${snapshotHeight}px` : "Waiting for viewport setup..."}</span>
       </section>
 
       <section ref={stageRef} className={styles.stage} aria-label="Lenis and GSAP pinned viewport test">
         <div ref={trackRef} className={styles.track}>
-          <article className={styles.panel}><span>01 / pin</span><strong>Scroll the stage.</strong><small>Lenis + ScrollTrigger</small></article>
+          <article className={styles.panel}><span>01 / pin</span><strong>Scroll the stage.</strong><small>{isSnapshotMode ? "Native touch / Lenis desktop" : "Lenis + ScrollTrigger"}</small></article>
           <article className={`${styles.panel} ${styles.panelBlue}`}><span>02 / measure</span><strong>Watch the HUD.</strong><small>{isSnapshotMode ? "Static section height" : "Live svh section height"}</small></article>
           <article className={`${styles.panel} ${styles.panelOrange}`}><span>03 / compare</span><strong>Toolbar movement.</strong><small>{isSnapshotMode ? "No mobile refresh" : "Refresh on resize"}</small></article>
         </div>
