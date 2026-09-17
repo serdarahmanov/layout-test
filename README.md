@@ -1,4 +1,13 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Layout Test
+
+An experimental Next.js project for learning how mobile browser chrome, notches, Dynamic Island cutouts, safe areas, viewport units, and scrolling affect page layout and animation.
+
+The project is organized into two connected parts:
+
+- `docs/test-cases/` contains the written definition for each experiment.
+- `app/test-1/`, `app/test-2/`, and so on contain the corresponding runnable pages.
+
+Each test page is intended to make one layout behavior visible in a real mobile browser. Tests will be added incrementally as the viewport behavior is explored.
 
 ## Getting Started
 
@@ -16,7 +25,17 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can start editing the home page in `app/page.tsx`. The page auto-updates as you edit the file.
+
+## Test pages
+
+The first viewport comparison pages are available at:
+
+- [Test 1](http://localhost:3000/test-1) — `100vh`, baseline “broken” case.
+- [Test 2](http://localhost:3000/test-2) — `100dvh`, dynamic viewport height.
+- [Test 3](http://localhost:3000/test-3) — `100svh`, safe minimum viewport height.
+
+The written definitions are in [`docs/test-cases/`](docs/test-cases/).
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 

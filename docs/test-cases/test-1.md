@@ -1,0 +1,17 @@
+# Test 1
+
+Status: Defined
+
+Runnable page: `/test-1`
+
+## Purpose
+
+Establish the classic mobile viewport-height problem using `100vh`.
+
+## Expected behavior
+
+When the browser toolbar is visible, the layout may be taller than the visible screen. The footer can appear cut off, covered, or require unexpected overflow. Scroll and compare the layout again after the toolbar hides.
+
+## Comparison
+
+Compare this page with [`test-2.md`](test-2.md), which uses `100dvh`, and [`test-3.md`](test-3.md), which uses `100svh`.

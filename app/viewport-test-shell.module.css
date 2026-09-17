@@ -1,0 +1,106 @@
+.page {
+  --ink: #1d3557;
+  --steel: #457b9d;
+  --frost: #a8dadc;
+  --honeydew: #f1faee;
+  --red: #e63946;
+  --line: #a8dadc;
+  --surface: #f1faee;
+  height: var(--viewport-height);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: auto;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+.vh { --viewport-height: 100vh; }
+.dvh { --viewport-height: 100dvh; }
+.svh { --viewport-height: 100svh; }
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--ink);
+  color: var(--honeydew);
+}
+
+.eyebrow,
+.cardLabel {
+  color: var(--frost);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 0.75rem 0 0;
+  font-size: clamp(2rem, 10vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.unit {
+  flex: none;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--steel);
+  border-radius: 999px;
+  background: var(--steel);
+  color: var(--honeydew);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+}
+
+.main {
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+}
+
+.card {
+  width: min(100%, 32rem);
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: var(--frost);
+  box-shadow: 0 1rem 3rem rgb(29 53 87 / 0.14);
+}
+
+.card p {
+  margin: 0.75rem 0 0;
+  color: var(--steel);
+  line-height: 1.6;
+}
+
+.instruction {
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--line);
+  font-size: 0.9rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--line);
+  background: var(--steel);
+  color: var(--honeydew);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 700px) {
+  .header,
+  .main,
+  .footer {
+    padding-right: 3rem;
+    padding-left: 3rem;
+  }
+}
