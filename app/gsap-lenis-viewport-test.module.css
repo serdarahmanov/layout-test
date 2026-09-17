@@ -1,0 +1,23 @@
+.page { --ink: #121820; --paper: #f1ede5; --muted: #65707b; --blue: #285bff; --orange: #f06d3b; min-height: 100%; background: var(--paper); color: var(--ink); font-family: var(--font-geist-sans), sans-serif; }
+.live { --stage-height: 100svh; }
+.snapshot { --stage-height: var(--snapshot-svh, 100svh); }
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 2.5rem 1.25rem 2rem; background: var(--ink); color: var(--paper); }
+.eyebrow, .label, .stageNote, .readout { color: var(--orange); font-family: var(--font-geist-mono), monospace; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+.header h1 { max-width: 32rem; margin: .75rem 0 0; font-size: clamp(3rem, 13vw, 7rem); line-height: .88; letter-spacing: -.08em; }
+.badge { max-width: 9rem; padding: .55rem .7rem; border: 1px solid #56616e; border-radius: 999px; color: #c9d1d9; font-family: var(--font-geist-mono), monospace; font-size: .68rem; text-align: center; }
+.explainer, .after { max-width: 54rem; margin: 0 auto; padding: 2.5rem 1.25rem; }
+.explainer { display: grid; gap: 1rem; }
+.explainer p, .after p { max-width: 38rem; margin: 0; color: var(--muted); line-height: 1.6; }
+.readout { color: var(--blue); }
+.stage { position: relative; height: var(--stage-height); min-height: 24rem; overflow: hidden; background: #d8d1c4; }
+.track { display: flex; width: 300vw; height: 100%; }
+.panel { display: grid; flex: 0 0 100vw; min-height: 100%; align-content: space-between; padding: 1.25rem; border-right: 1px solid rgb(18 24 32 / .15); background: #d8d1c4; }
+.panelBlue { background: #a8c0ff; }
+.panelOrange { background: #ffc1a8; }
+.panel span, .panel small { color: var(--muted); font-family: var(--font-geist-mono), monospace; font-size: .72rem; }
+.panel strong { max-width: 18rem; font-size: clamp(2.5rem, 10vw, 7rem); line-height: .88; letter-spacing: -.08em; }
+.orb { position: absolute; top: 25%; right: 12vw; width: clamp(4rem, 13vw, 9rem); aspect-ratio: 1; border-radius: 50%; background: var(--blue); mix-blend-mode: multiply; pointer-events: none; }
+.stageNote { position: absolute; right: 1.25rem; bottom: 1.25rem; color: var(--ink); }
+.after { min-height: 70vh; }
+.after h2 { max-width: 35rem; margin: .75rem 0 1rem; font-size: clamp(2.2rem, 9vw, 5rem); line-height: .9; letter-spacing: -.07em; }
+@media (min-width: 700px) { .header { padding: 4rem 3rem 3rem; } .explainer, .after { padding-right: 3rem; padding-left: 3rem; } .stageNote { right: 3rem; } }
