@@ -21,7 +21,7 @@ function snapshotCssSvh() {
   return height;
 }
 
-export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false, singlePinnedTrigger = false, promotePinnedLayer = false, syncTouchLenis = false, transparentStage = false, normalizeTouchScroll = false, stableToolbarColor = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean; singlePinnedTrigger?: boolean; promotePinnedLayer?: boolean; syncTouchLenis?: boolean; transparentStage?: boolean; normalizeTouchScroll?: boolean; stableToolbarColor?: boolean }) {
+export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false, singlePinnedTrigger = false, promotePinnedLayer = false, syncTouchLenis = false, transparentStage = false, normalizeTouchScroll = false, stableToolbarColor = false, edgePaddedStage = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean; singlePinnedTrigger?: boolean; promotePinnedLayer?: boolean; syncTouchLenis?: boolean; transparentStage?: boolean; normalizeTouchScroll?: boolean; stableToolbarColor?: boolean; edgePaddedStage?: boolean }) {
   const stageRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
@@ -199,7 +199,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
           <span className={styles.eyebrow}>Viewport lab / {isSnapshotMode ? "Test 11" : "Test 10"}</span>
           <h1>{isSnapshotMode ? "Pins that wait." : "Pins that chase."}</h1>
         </div>
-        <span className={styles.badge}>{normalizeTouchScroll ? "snapshot + normalizeScroll" : syncTouchLenis ? "snapshot + syncTouch Lenis" : enableTouchLenis ? "snapshot + touch Lenis" : isSnapshotMode ? "snapshot + native/Lenis" : "live svh + Lenis"}{stableToolbarColor ? " + stable bg" : ""}</span>
+        <span className={styles.badge}>{normalizeTouchScroll ? "snapshot + normalizeScroll" : syncTouchLenis ? "snapshot + syncTouch Lenis" : enableTouchLenis ? "snapshot + touch Lenis" : isSnapshotMode ? "snapshot + native/Lenis" : "live svh + Lenis"}{stableToolbarColor ? " + stable bg" : ""}{edgePaddedStage ? " + edge padding" : ""}</span>
       </header>
 
       <section className={styles.explainer}>
@@ -208,7 +208,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
           ? normalizeTouchScroll
             ? "The CSS-native svh value is captured after load and paint. Touch scrolling is handed to ScrollTrigger.normalizeScroll({ type: \"touch\" }) instead of Lenis, which is GSAP's own fix for the iOS toolbar expanding (and staying expanded) once a fixed-position pin engages during a touch scroll."
             : syncTouchLenis
-              ? `The CSS-native svh value is captured after load and paint. Lenis takes over touch input directly (syncTouch) and drives scroll position from its own rAF loop, instead of the scrub waiting on throttled native scroll events.${stableToolbarColor ? " The pinned stage's background is also pushed onto <html>/<body>, so Safari's toolbar tinting (which samples a fixed element's background in current Safari, and falls back to body's background otherwise) resolves to the same color either way instead of a stray or stuck one." : ""}`
+              ? `The CSS-native svh value is captured after load and paint. Lenis takes over touch input directly (syncTouch) and drives scroll position from its own rAF loop, instead of the scrub waiting on throttled native scroll events.${stableToolbarColor ? " The pinned stage's background is also pushed onto <html>/<body>, so Safari's toolbar tinting (which samples a fixed element's background in current Safari, and falls back to body's background otherwise) resolves to the same color either way instead of a stray or stuck one." : ""}${edgePaddedStage ? " The pinned stage also carries a 3px top/bottom padding, so a sliver of its own background is genuinely painted at the viewport edge instead of being fully occluded by the full-bleed panel content, giving Safari's edge-pixel sampling something real to read." : ""}`
               : enableTouchLenis
                 ? "The CSS-native svh value is captured after load and paint. This experiment keeps Lenis on touch devices while testing the normal GSAP pin behavior."
                 : "The CSS-native svh value is captured after load and paint. Pin creation waits for that value. Desktop uses Lenis; touch devices use native scrolling, while mobile toolbar resize is ignored."
@@ -216,7 +216,7 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
         <span className={styles.readout}>{snapshotHeight ? `Frozen height: ${snapshotHeight}px` : "Waiting for viewport setup..."}</span>
       </section>
 
-      <section ref={stageRef} className={`${styles.stage} ${promotePinnedLayer ? styles.promotedStage : ""} ${transparentStage ? styles.transparentStage : ""} ${stableToolbarColor ? styles.stableStage : ""}`} aria-label="Lenis and GSAP pinned viewport test">
+      <section ref={stageRef} className={`${styles.stage} ${promotePinnedLayer ? styles.promotedStage : ""} ${transparentStage ? styles.transparentStage : ""} ${stableToolbarColor ? styles.stableStage : ""} ${edgePaddedStage ? styles.edgePaddedStage : ""}`} aria-label="Lenis and GSAP pinned viewport test">
         <div ref={trackRef} className={styles.track}>
           <article className={styles.panel}><span>01 / pin</span><strong>Scroll the stage.</strong><small>{isSnapshotMode ? "Native touch / Lenis desktop" : "Lenis + ScrollTrigger"}</small></article>
           <article className={`${styles.panel} ${styles.panelBlue}`}><span>02 / measure</span><strong>Watch the HUD.</strong><small>{isSnapshotMode ? "Static section height" : "Live svh section height"}</small></article>
