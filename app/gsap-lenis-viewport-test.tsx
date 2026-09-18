@@ -21,7 +21,7 @@ function snapshotCssSvh() {
   return height;
 }
 
-export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false, singlePinnedTrigger = false, promotePinnedLayer = false, syncTouchLenis = false, transparentStage = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean; singlePinnedTrigger?: boolean; promotePinnedLayer?: boolean; syncTouchLenis?: boolean; transparentStage?: boolean }) {
+export default function GsapLenisViewportTest({ mode, showHud = true, enableTouchLenis = false, singlePinnedTrigger = false, promotePinnedLayer = false, syncTouchLenis = false, transparentStage = false, normalizeTouchScroll = false }: { mode: TestMode; showHud?: boolean; enableTouchLenis?: boolean; singlePinnedTrigger?: boolean; promotePinnedLayer?: boolean; syncTouchLenis?: boolean; transparentStage?: boolean; normalizeTouchScroll?: boolean }) {
   const stageRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
@@ -53,12 +53,19 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
     let resizeTimer = 0;
     let combinedTimeline: ReturnType<typeof gsap.timeline> | null = null;
     const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const useLenis = enableTouchLenis || syncTouchLenis || !isSnapshotMode || !isTouchDevice;
+    const useNormalizeScroll = normalizeTouchScroll && isSnapshotMode && isTouchDevice;
+    const useLenis = !useNormalizeScroll && (enableTouchLenis || syncTouchLenis || !isSnapshotMode || !isTouchDevice);
     const lenis = useLenis ? new Lenis({ autoRaf: false, smoothWheel: true, syncTouch: syncTouchLenis }) : null;
+    if (useNormalizeScroll) ScrollTrigger.normalizeScroll({ type: "touch" });
     const stage = stageRef.current;
     const track = trackRef.current;
     const orb = orbRef.current;
-    if (!stage || !track || !orb) return () => lenis?.destroy();
+    if (!stage || !track || !orb) {
+      return () => {
+        lenis?.destroy();
+        if (useNormalizeScroll) ScrollTrigger.normalizeScroll(false);
+      };
+    }
     if (isSnapshotMode) ScrollTrigger.config({ ignoreMobileResize: true });
 
     const setup = () => {
@@ -159,12 +166,13 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
       window.removeEventListener("orientationchange", onOrientationChange);
       if (lenis) gsap.ticker.remove(ticker);
       lenis?.destroy();
+      if (useNormalizeScroll) ScrollTrigger.normalizeScroll(false);
       combinedTimeline?.kill();
       ScrollTrigger.getAll().forEach((trigger) => {
         if (trigger.trigger === stage) trigger.kill();
       });
     };
-  }, [enableTouchLenis, isSnapshotMode, promotePinnedLayer, ready, singlePinnedTrigger, snapshotHeight, syncTouchLenis]);
+  }, [enableTouchLenis, isSnapshotMode, normalizeTouchScroll, promotePinnedLayer, ready, singlePinnedTrigger, snapshotHeight, syncTouchLenis]);
 
   const pageStyle = snapshotHeight
     ? ({ "--snapshot-svh": `${snapshotHeight}px` } as CSSProperties)
@@ -177,17 +185,19 @@ export default function GsapLenisViewportTest({ mode, showHud = true, enableTouc
           <span className={styles.eyebrow}>Viewport lab / {isSnapshotMode ? "Test 11" : "Test 10"}</span>
           <h1>{isSnapshotMode ? "Pins that wait." : "Pins that chase."}</h1>
         </div>
-        <span className={styles.badge}>{syncTouchLenis ? "snapshot + syncTouch Lenis" : enableTouchLenis ? "snapshot + touch Lenis" : isSnapshotMode ? "snapshot + native/Lenis" : "live svh + Lenis"}</span>
+        <span className={styles.badge}>{normalizeTouchScroll ? "snapshot + normalizeScroll" : syncTouchLenis ? "snapshot + syncTouch Lenis" : enableTouchLenis ? "snapshot + touch Lenis" : isSnapshotMode ? "snapshot + native/Lenis" : "live svh + Lenis"}</span>
       </header>
 
       <section className={styles.explainer}>
         <span className={styles.label}>{isSnapshotMode ? "Skill strategy" : "Control case"}</span>
         <p>{isSnapshotMode
-          ? syncTouchLenis
-            ? "The CSS-native svh value is captured after load and paint. Lenis takes over touch input directly (syncTouch) and drives scroll position from its own rAF loop, instead of the scrub waiting on throttled native scroll events."
-            : enableTouchLenis
-              ? "The CSS-native svh value is captured after load and paint. This experiment keeps Lenis on touch devices while testing the normal GSAP pin behavior."
-              : "The CSS-native svh value is captured after load and paint. Pin creation waits for that value. Desktop uses Lenis; touch devices use native scrolling, while mobile toolbar resize is ignored."
+          ? normalizeTouchScroll
+            ? "The CSS-native svh value is captured after load and paint. Touch scrolling is handed to ScrollTrigger.normalizeScroll({ type: \"touch\" }) instead of Lenis, which is GSAP's own fix for the iOS toolbar expanding (and staying expanded) once a fixed-position pin engages during a touch scroll."
+            : syncTouchLenis
+              ? "The CSS-native svh value is captured after load and paint. Lenis takes over touch input directly (syncTouch) and drives scroll position from its own rAF loop, instead of the scrub waiting on throttled native scroll events."
+              : enableTouchLenis
+                ? "The CSS-native svh value is captured after load and paint. This experiment keeps Lenis on touch devices while testing the normal GSAP pin behavior."
+                : "The CSS-native svh value is captured after load and paint. Pin creation waits for that value. Desktop uses Lenis; touch devices use native scrolling, while mobile toolbar resize is ignored."
           : "This control deliberately mixes live 100svh, innerHeight-based animation distances, immediate pin creation, and refreshes on every resize. Use it to expose toolbar-related jumps."}</p>
         <span className={styles.readout}>{snapshotHeight ? `Frozen height: ${snapshotHeight}px` : "Waiting for viewport setup..."}</span>
       </section>
